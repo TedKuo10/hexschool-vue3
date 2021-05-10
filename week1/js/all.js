@@ -1,144 +1,42 @@
-console.log("TEST");
+/**
+ * 需求：
+ * todo: 用戶可以新增產品，新增後會移除 input 的內容
+ * todo: 用戶可以針對產品切換啟用狀態
+ * todo: 用戶可以刪除單一產品
+ * todo: 用戶可以一鍵刪除所有產品
+ */
 
-let productData = []
 
-document.getElementById('addProduct').addEventListener('click', function(e) {
-  const timeStamp = Math.floor(Date.now());
-  if (document.getElementById('title').value.trim() !== '') {
-    productData.push({
-      id: timeStamp,
-      title: document.getElementById('title').value.trim(),
-      origin_price: parseInt(document.getElementById('origin_price').value) || 0,
-      price: parseInt(document.getElementById('price').value) || 0,
-      is_enabled: false,
-    })
-    let str = '';
-    productData.forEach((item) => {
-      str += `
-      <tr>
-      <td>${item.title}</td>
-      <td width="120">
-        ${item.origin_price}
-      </td>
-      <td width="120">
-        ${item.price}
-      </td>
-      <td width="100">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="${item.id}" ${item.is_enabled? 'checked': ''} data-action="status" data-id="${item.id}">
-          <label class="form-check-label" for="${item.id}">${item.is_enabled? '啟用' : '未啟用'}</label>
-        </div>
-      </td>
-      <td width="120">
-        <button type="button" class="btn btn-sm btn-danger move" data-action="remove" data-id="${item.id}"> 刪除 </button>
-      </td>
-    </tr>`;
-    })
-    document.getElementById('productList').innerHTML = str;
-    document.getElementById('productCount').textContent = productData.length;
+//* Product 資訊
+const productTitle = document.querySelector("#title");
+const productOriginPrice = document.querySelector("#origin_price");
+const productPrice = document.querySelector("#price");
 
-    document.getElementById('title').value = '';
-    document.getElementById('origin_price').value = '';
-    document.getElementById('price').value = '';
+//* behavior
+const btnAddProduct = document.querySelector("#addProduct");
+const btnClearAll = document.querySelector("#clearAll");
+const productList = document.querySelector("#productList"); // 針對 product list 以事件指派的概念來監聽底下發生的事件
+const productCount = document.querySelector("#productCount");
+
+let productDatas = [];
+
+
+//* 上方表單
+function renderData(){
+  
+}
+
+function addProduct(){
+  let productObj = {
+    id: Date.now(),
+    title: productTitle.value,
+    origin_price: productOriginPrice.value,
+    price: productPrice.value
   }
-});
 
-document.getElementById('clearAll').addEventListener('click', function(e) {
-  e.preventDefault();
-  productData = [];
+  productDatas.push(productObj);
 
-  let str = '';
-  productData.forEach((item) => {
-    str += `
-    <tr>
-      <td>${item.title}</td>
-      <td width="120">
-        ${item.origin_price}
-      </td>
-      <td width="120">
-        ${item.price}
-      </td>
-      <td width="100">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="${item.id}" ${item.is_enabled? 'checked': ''} data-action="status" data-id="${item.id}">
-          <label class="form-check-label" for="${item.id}">${item.is_enabled? '啟用' : '未啟用'}</label>
-        </div>
-      </td>
-      <td width="120">
-        <button type="button" class="btn btn-sm btn-danger move" data-action="remove" data-id="${item.id}"> 刪除 </button>
-      </td>
-    </tr>`;
-  })
-  document.getElementById('productList').innerHTML = str;
-  document.getElementById('productCount').textContent = productData.length;
-});
-
-document.getElementById('productList').addEventListener('click', function(e) {
-  const action = e.target.dataset.action;
-  const id = e.target.dataset.id;
-  if (action === 'remove') {
-    let newIndex = 0;
-    productData.forEach((item, key) => {
-      if (id == item.id) {
-        newIndex = key;
-      }
-    })
-    productData.splice(newIndex, 1);
-
-  } else if (action === 'status') {
-    productData.forEach((item) => {
-      if (id == item.id) {
-        item.is_enabled = !item.is_enabled;
-      }
-    })
-  }
-  let str = '';
-  productData.forEach(function (item) {
-    str += `
-    <tr>
-      <td>${item.title}</td>
-      <td width="120">
-        ${item.origin_price}
-      </td>
-      <td width="120">
-        ${item.price}
-      </td>
-      <td width="100">
-        <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="${item.id}" ${item.is_enabled? 'checked': ''} data-action="status" data-id="${item.id}">
-          <label class="form-check-label" for="${item.id}">${item.is_enabled? '啟用' : '未啟用'}</label>
-        </div>
-      </td>
-      <td width="120">
-        <button type="button" class="btn btn-sm btn-danger move" data-action="remove" data-id="${item.id}"> 刪除 </button>
-      </td>
-    </tr>`;
-  })
-  document.getElementById('productList').innerHTML = str;
-  document.getElementById('productCount').textContent = productData.length;
-});
-
-let str = '';
-productData.forEach((item) => {
-  str += `
-  <tr>
-    <td>${item.title}</td>
-    <td width="120">
-      ${item.origin_price}
-    </td>
-    <td width="120">
-      ${item.price}
-    </td>
-    <td width="100">
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="${item.id}" ${item.is_enabled? 'checked': ''} data-action="status" data-id="${item.id}">
-        <label class="form-check-label" data-action="status" for="${item.id}">${item.is_enabled? '啟用' : '未啟用'}</label>
-      </div>
-    </td>
-    <td width="120">
-      <button type="button" class="btn btn-sm btn-danger move" data-action="remove" data-id="${item.id}"> 刪除 </button>
-    </td>
-  </tr>`;
-})
-document.getElementById('productList').innerHTML = str;
-document.getElementById('productCount').textContent = productData.length;
+  productTitle.value = '';
+  productOriginPrice.value = '';
+  productPrice.value = '';
+}
