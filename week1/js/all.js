@@ -57,7 +57,13 @@ function checkData(title, originPrice, price){
 function addProduct(){
 
   if (checkData(productTitle.value, productOriginPrice.value, productPrice.value)) {
-    alert("請輸入資料");
+    // alert("請輸入資料");
+    swal({
+      title: "你累了嗎?",
+      text: "資料不正確",
+      icon: "waring",
+      button: "打起精神",
+    });
   } else {
     // check 頁面看產品有哪些資料
     let productObj = {
