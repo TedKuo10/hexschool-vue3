@@ -31,7 +31,6 @@ function renderData(){
   let str = '';
   // 當 productData 數量為 0 時，不會跑 forEach
   productData.forEach(function(item, index){
-    console.log(index);
     str += `<tr>
       <td>${item.title}</td>
       <td width="120">
@@ -42,8 +41,8 @@ function renderData(){
       </td>
       <td width="100">
         <div class="form-check form-switch">
-          <input class="form-check-input" type="checkbox" id="${item.id}" data-action="status" data-id="${item.id}">
-          <label class="form-check-label" for="${item.id}">未啟用</label>
+          <input class="form-check-input" type="checkbox" id="${item.id}" ${item.is_enable ? "checked" : ""} data-action="status" data-id="${item.id}">
+          <label class="form-check-label" for="${item.id}">${item.is_enable ? "啟用" : "未啟用"}</label>
         </div>
       </td>
       <td width="120">
@@ -57,6 +56,8 @@ function renderData(){
 
 // 上方表單
 function addProduct(){
+
+  // check 頁面看產品有哪些資料
   let productObj = {
     id: Date.now(),
     title: productTitle.value,
@@ -73,23 +74,50 @@ function addProduct(){
 }
 
 function clearAllProduct(e){
-  // e.preventDefault();
-  // button 標籤預設值是 submit，如果沒設定 type=button，會提交表單畫面導致重整，需要預防
+  e.preventDefault();
+  // button 標籤預設值是 submit，在沒設定 type=button 的情況下，會提交表單畫面導致重整，需要預防
   productData = [];
   renderData();
 }
 
 // 下方表單
 function editProduct(e){
-  // console.log(e.target.attributes['data-action'].value);
+  // console.log(e.target.dataset);
+  let behavior = e.target.dataset;
 
-  console.log(e.target.dataset.action);
+  if (behavior.action === "status") {
+    statusProduct(parseInt(behavior.id));
+    renderData();
+  } else if (behavior.action === "remove") {
+    removeProduct(parseInt(behavior.id));
+    renderData();
+  }
 }
 
+// ? 每次都重新渲染，當產品一多能感覺到延遲感耶 @@
+function statusProduct(id){
+  productData.forEach(function(item){
+    if (item.id === id) {
+      item.is_enable = !item.is_enable;
+      return;
+    }
+    // console.log(item);
+  });
+}
+
+function removeProduct(id){
+  productData.forEach(function(item, index){
+    if (item.id === id) {
+      productData.splice(index, 1);
+      return;
+    }
+  });
+}
 
 
 //* program start
 
+// 上方表單
 btnAddProduct.addEventListener('click', addProduct);
 btnClearAll.addEventListener('click', clearAllProduct);
 
