@@ -18,13 +18,7 @@ const btnClearAll = document.querySelector("#clearAll");
 const productList = document.querySelector("#productList"); // 針對 product list 以事件指派的概念來監聽底下發生的事件
 const productCount = document.querySelector("#productCount");
 
-let productData = [{
-  id: Date.now(),
-  title: "TEST",
-  origin_price: 2,
-  price: 2,
-  is_enable: false
-}];
+let productData = [];
 
 
 function renderData(){
@@ -55,22 +49,33 @@ function renderData(){
 }
 
 // 上方表單
+function checkData(title, originPrice, price){
+  let productInfor = [title, originPrice, price];
+  return productInfor.includes("");
+}
+
 function addProduct(){
 
-  // check 頁面看產品有哪些資料
-  let productObj = {
-    id: Date.now(),
-    title: productTitle.value,
-    origin_price: productOriginPrice.value,
-    price: productPrice.value,
-    is_enable: false
-  }
+  if (checkData(productTitle.value, productOriginPrice.value, productPrice.value)) {
+    alert("請輸入資料");
+  } else {
+    // check 頁面看產品有哪些資料
+    let productObj = {
+      id: Date.now(),
+      title: productTitle.value,
+      origin_price: productOriginPrice.value,
+      price: productPrice.value,
+      is_enable: false
+    }
 
-  productData.push(productObj);
-  renderData();
-  productTitle.value = '';
-  productOriginPrice.value = '';
-  productPrice.value = '';
+    productData.push(productObj);
+    renderData();
+    productTitle.value = '';
+    productOriginPrice.value = '';
+    productPrice.value = '';
+  }
+  
+
 }
 
 function clearAllProduct(e){
