@@ -61,7 +61,7 @@ function addProduct(){
     swal({
       title: "你累了嗎?",
       text: "資料不正確",
-      icon: "waring",
+      icon: "warning",
       button: "打起精神",
     });
   } else {
@@ -73,7 +73,7 @@ function addProduct(){
       price: productPrice.value,
       is_enable: false
     }
-
+    swal("成功", "資料已送出", "success");
     productData.push(productObj);
     renderData();
     productTitle.value = '';
