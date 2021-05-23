@@ -1,5 +1,3 @@
-console.clear();
-
 // login infor
 const userNameInput = document.querySelector("#username");
 const pwdInput = document.querySelector("#password");
@@ -49,7 +47,9 @@ function login(e) {
 }
 
 
-
-
 //* main program
 loginBtn.addEventListener('click', login);
+
+
+
+console.clear();
