@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+</head>
+<body>
+
+  <div>
+    <input type="email" id="email">
+    <input type="password" id="password">
+    <button type="button" id="login">登入</button>
+  </div>
+
+  <div>
+    <hr>
+    <button type="button" id="check">確認是否登入</button>
+    <button type="button" id="getProducts">取得後台的產品列表</button>
+    <button type="button" id="addProduct">新增一個產品</button>
+    <button type="button" id="delProduct">刪除一個產品</button>
+  </div>
+
+  <script>
+  const url = 'https://vue3-course-api.hexschool.io/'; // 請加入站點
+  const path = ''; // 請加入個人 API Path
+
+  // #1 如何串接 API 資料
+  axios.get(`${url}api/${path}/products`) // request
+    .then(function(res){
+      console.log(res);
+    })  // 接收回應
+  
+  const emailInput = document.querySelector('#email');
+  const pwInput = document.querySelector('#password');
+  const loginBtn = document.querySelector('#login');
+  const checkBtn = document.querySelector('#check');
+  const getProductsBtn = document.querySelector('#getProducts');
+  const addProductBtn = document.querySelector('#addProduct');
+  const delProductBtn = document.querySelector('#delProduct');
+
+  loginBtn.addEventListener('click', login);
+
+  function login() {
+    const username = emailInput.value;
+    const password = pwInput.value;
+
+    const user = {
+      username,
+      password
+    }
+    console.log(user);
+    // #2 發送 API 至遠端並登入（並儲存 Token）
+    axios.post(`${url}admin/signin`, user)
+      .then(res => {
+        console.log(res);
+        const token = res.data.token;
+        const expired = res.data.expired;
+        console.log(token, expired);
+        document.cookie = `hexToken=${token}; expires=${new Date(expired)};`;
+      })
+
+  }
+
+  checkBtn.addEventListener('click', checkLogin);
+  function checkLogin(params) {
+    // #3 取得 Token（Token 僅需要設定一次）
+    const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    // console.log(token);
+    axios.defaults.headers.common['Authorization'] = token;
+    // #4  確認是否登入
+    axios.post(`${url}api/user/check`)
+      .then(res => {
+        console.log(res);
+      })
+
+  }
+
+  getProductsBtn.addEventListener('click', getProducts)
+  function getProducts() {
+    // #5 取得後台產品列表
+    // token 設定只需要設定一次，還沒設定到 header 的話會無法通過驗證
+    
+    axios.get(`${url}api/${path}/admin/products`)
+      .then(res => {
+        console.log(res);
+      })
+  }
+
+
+  addProductBtn.addEventListener('click', addProduct)
+  function addProduct() {
+
+    const product = {
+      data: {
+        title: '[賣]動物園造型衣服3',
+        category: '衣服2',
+        origin_price: 100,
+        price: 300,
+        unit: '個',
+        description: 'Sit down please 名設計師設計',
+        content: '這是內容',
+        is_enabled: 1,
+        imageUrl: 'https://images.unsplash.com/photo-1573662012516-5cb4399006e7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1267&q=80'
+      }
+    }
+
+    axios.post(`${url}api/${path}/admin/product`, product)
+      .then(res => {
+        console.log(res);
+      })
+    // #6 新增一個產品
+  }
+
+
+  delProductBtn.addEventListener('click', removeProduct)
+  function removeProduct() {
+    // #7 刪除一個產品
+    const id = "-MaNTlv4v1ZXSL33TkrC";
+
+    axios.delete(`${url}api/${path}/admin/product/${id}`)
+      .then(res => {
+        console.log(res);
+      })
+
+  }
+
+  </script>
+</body>
+</html>
