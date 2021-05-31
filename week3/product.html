@@ -63,7 +63,7 @@
                   <button type="button" class="btn btn-outline-primary btn-sm" @click="openModal('edit', item)">
                     編輯
                   </button>
-                  <button type="button" class="btn btn-outline-danger btn-sm">
+                  <button type="button" class="btn btn-outline-danger btn-sm" @click="openModal('delete', item)">
                     刪除
                   </button>
                 </div>
@@ -125,7 +125,11 @@
                     <!-- <button class="btn btn-outline-danger btn-sm d-block w-100" :class="{'d-none': tempProduct.imagesUrl.length === 0 || tempProduct.imagesUrl[tempProduct.imagesUrl.length-1] === ""}" @click="tempProduct.imagesUrl.pop()">
                       刪除圖片
                     </button> -->
-                    <button class="btn btn-outline-danger btn-sm d-block w-100" v-if='tempProduct.imagesUrl.length || tempProduct.imagesUrl[tempProduct.imagesUrl.length-1]' @click="tempProduct.imagesUrl.pop()">
+                    <!-- <button class="btn btn-outline-danger btn-sm d-block w-100" v-if='tempProduct.imagesUrl.length || tempProduct.imagesUrl[tempProduct.imagesUrl.length-1]' @click="deleteImg">
+                      刪除圖片
+                    </button> -->
+
+                    <button class="btn btn-outline-danger btn-sm d-block w-100" @click="deleteImg" v-if="this.tempProduct.imagesUrl[this.tempProduct.imagesUrl.length-1]!==''">
                       刪除圖片
                     </button>
                   </div>
@@ -152,11 +156,11 @@
                   <div class="row">
                     <div class="form-group col-md-6">
                       <label for="origin_price">原價</label>
-                      <input id="origin_price" v-model="tempProduct.origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價">
+                      <input id="origin_price" v-model.number="tempProduct.origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價">
                     </div>
                     <div class="form-group col-md-6">
                       <label for="price">售價</label>
-                      <input id="price" v-model="tempProduct.price" type="number" min="0" class="form-control"
+                      <input id="price" v-model.number="tempProduct.price" type="number" min="0" class="form-control"
                              placeholder="請輸入售價">
                     </div>
                   </div>
@@ -207,13 +211,13 @@
             </div>
             <div class="modal-body">
               是否刪除
-              <strong class="text-danger"></strong> 商品(刪除後將無法恢復)。
+              <strong class="text-danger">{{ tempProduct.title }}</strong> 商品(刪除後將無法恢復)。
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                 取消
               </button>
-              <button type="button" class="btn btn-danger">
+              <button type="button" class="btn btn-danger" @click="delProduct">
                 確認刪除
               </button>
             </div>

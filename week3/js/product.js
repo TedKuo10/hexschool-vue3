@@ -8,7 +8,8 @@
  * todo: 編輯產品
  */
 
-let productModal = '';
+let productModal = null;
+let delProductModal = null;
 
 const app = Vue.createApp({
   data() {
@@ -18,7 +19,7 @@ const app = Vue.createApp({
       products: [],
       isNew: false,
       tempProduct: {
-        imagesUrl: []
+        imagesUrl: [""]
       }
     }
   },
@@ -47,7 +48,7 @@ const app = Vue.createApp({
       //* add new product
       if (cond === "new") {
         this.tempProduct = {
-          imagesUrl: []
+          imagesUrl: [""]
         };
         this.isNew = true;
         productModal.show();
@@ -55,15 +56,27 @@ const app = Vue.createApp({
         this.tempProduct = {...item};
         this.isNew = false;
         productModal.show();
+      } else if (cond === "delete") { //* delete product
+        this.tempProduct = { ...item };
+        delProductModal.show()
       }
 
-
-      //* delete product
     },
     addImg() {
-      this.tempProduct.imagesUrl.push("");
+      if (this.tempProduct.imagesUrl[this.tempProduct.imagesUrl.length-1] != "") {
+        this.tempProduct.imagesUrl.push("");
+      } else {
+        
+      }
       // this.modalObj.imgInputShow = !this.modalObj.imgInputShow;
 
+    },
+    deleteImg() {
+      console.log(this.tempProduct.imagesUrl.length);
+      this.tempProduct.imagesUrl.pop();
+      if (this.tempProduct.imagesUrl.length === 0){
+        this.tempProduct.imagesUrl.push("");
+      }
     },
     updateProduct() {
 
@@ -92,12 +105,30 @@ const app = Vue.createApp({
         }).catch((err) => {
           console.log(err);
         });
+    },
+    delProduct() {
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
+      axios.delete(url).then((response) => {
+        if (response.data.success) {
+          alert(response.data.message);
+          delProductModal.hide();
+          this.getProducts();
+        } else {
+          alert(response.data.message);
+        }
+      });
+
     }
   },
   mounted() {
 
     //* 實體化 bs modal
     productModal = new bootstrap.Modal(document.getElementById("productModal"), {
+      keyboard: false,
+      backdrop: 'static'
+    });
+
+    delProductModal = new bootstrap.Modal(document.getElementById('delProductModal'), {
       keyboard: false,
       backdrop: 'static'
     });
