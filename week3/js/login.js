@@ -40,7 +40,7 @@ const app = Vue.createApp({
     }
   },
   created() {
-    
+
   }
 });
 
