@@ -33,7 +33,7 @@ const app = Vue.createApp({
       const url = `${apiUrl}/api/${apiPath}/products`;
       axios.get(url)
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           this.products = res.data.products;
         })
     },
@@ -49,10 +49,43 @@ const app = Vue.createApp({
           this.product = res.data.product;
           this.$refs.userProductModal.openModal();
         })
+    },
+    addCart(id, qty=1) {
+      const cart = {
+        product_id: id,
+        qty
+      };
+      console.log(cart);
+      const url = `${apiUrl}/api/${apiPath}/cart`;
+      axios.post(url, {data: cart})
+        .then((res) => {
+          console.log(res);
+          this.getCart();
+        })
+    },
+    getCart() {
+      const url = `${apiUrl}/api/${apiPath}/cart`;
+      axios.get(url)
+        .then((res) => {
+          this.cart = res.data.data
+        })
+    },
+    updateCart(item) {
+      const url = `${apiUrl}/api/${apiPath}/cart/${item.id}`;
+      const cart = {
+        product_id: item.product.id,
+        qty: item.qty
+      }
+      console.log(cart, url)
+      axios.put(url, {data: cart})
+        .then((res) => {
+          console.log(res);
+        })
     }
   },
   mounted() {
     this.getProducts();
+    this.getCart();
     // this.$refs.userProductModal.openModal();
 
   },

@@ -25,7 +25,7 @@
         <div class="mt-4">
           <!-- 產品Modal -->
           <user-product-modal ref="userProductModal"
-          :product="product"></user-product-modal>
+          :product="product" @add-cart="addCart"></user-product-modal>
           <!-- 產品Modal -->
 
           <table class="table align-middle">
@@ -66,7 +66,8 @@
                       <i class="fas fa-spinner fa-pulse"></i>
                       查看更多
                     </button>
-                    <button type="button" class="btn btn-outline-danger">
+                    <button type="button" class="btn btn-outline-danger"
+                    @click="addCart(item.id)">
                       <i class="fas fa-spinner fa-pulse"></i>
                       加到購物車
                     </button>
@@ -91,8 +92,9 @@
               </tr>
             </thead>
             <tbody>
+              <!-- 判斷購物車內是否有資料 -->
               <template v-if="cart.carts">
-                <tr>
+                <tr v-for="(item, index) in cart.carts" :key="item.id">
                   <td>
                     <button type="button" class="btn btn-outline-danger btn-sm">
                       <i class="fas fa-spinner fa-pulse"></i>
@@ -100,22 +102,27 @@
                     </button>
                   </td>
                   <td>
-                    {{ }}
+                    {{ item.product.title }}
                     <div class="text-success">已套用優惠券</div>
                   </td>
                   <td>
                     <div class="input-group input-group-sm">
                       <div class="input-group mb-3">
-                        <input min="1" type="number" class="form-control" />
+                        <input min="1" type="number"
+                        @change="updateCart(item)"
+                        v-model.number="item.qty" class="form-control" />
+                        <!-- 如果沒有加上修飾符，會變字串，就算有 type="number" -->
+                        <!-- 每次更新時都觸發一次 change -->
                         <span class="input-group-text" id="basic-addon2"
-                          >{{ }}</span
+                          >{{ item.product.unit }}</span
                         >
                       </div>
                     </div>
                   </td>
                   <td class="text-end">
+                    {{ item.total }}
                     <small class="text-success">折扣價：</small>
-                    {{ }}
+                    {{ item.final_total }}
                   </td>
                 </tr>
               </template>

@@ -29,6 +29,7 @@ export default {
                   <button type="button" class="btn btn-primary"
                   @click="$emit('add-cart', tempProduct.id, qty)"
                           >加入購物車</button>
+                  <!-- 不一定是傳遞資料，透過 emit 觸發外層的事件 -->
                 </div>
               </div>
             </div>
