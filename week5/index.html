@@ -62,13 +62,22 @@
                 <td>
                   <div class="btn-group btn-group-sm">
                     <button type="button" class="btn btn-outline-secondary"
+                    :disabled="loadingStatus.loadingItem === item.id"
                     @click="openModal(item)">
-                      <i class="fas fa-spinner fa-pulse"></i>
+                      <div class="spinner-grow spinner-grow-sm" role="status"
+                      v-if="loadingStatus.loadingItem === item.id">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
                       查看更多
                     </button>
                     <button type="button" class="btn btn-outline-danger"
+                    :disabled="loadingStatus.loadingItem === item.id"
                     @click="addCart(item.id)">
-                      <i class="fas fa-spinner fa-pulse"></i>
+                      <!-- <i class="fas fa-spinner fa-pulse"></i> -->
+                      <div class="spinner-grow spinner-grow-sm" role="status"
+                      v-if="loadingStatus.loadingItem === item.id">
+                        <span class="visually-hidden">Loading...</span>
+                      </div>
                       加到購物車
                     </button>
                   </div>
@@ -110,6 +119,7 @@
                       <div class="input-group mb-3">
                         <input min="1" type="number"
                         @change="updateCart(item)"
+                        :disabled="item.id === loadingStatus.loadingItem"
                         v-model.number="item.qty" class="form-control" />
                         <!-- 如果沒有加上修飾符，會變字串，就算有 type="number" -->
                         <!-- 每次更新時都觸發一次 change -->
@@ -139,7 +149,7 @@
             </tfoot>
           </table>
         </div>
-        <!-- <div class="my-5 row justify-content-center">
+        <div class="my-5 row justify-content-center">
                     <v-form ref="form" class="col-md-6" v-slot="{ errors }">
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
@@ -150,6 +160,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': errors['email'] }"
                                 placeholder="請輸入 Email"
+                                rules="email|required" v-model="form.user.email"
                             ></v-field>
                             <error-message
                                 name="email"
@@ -168,7 +179,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': errors['姓名'] }"
                                 placeholder="請輸入姓名"
-                                rules="required"
+                                rules="required" v-model="form.user.name"
                             ></v-field>
                             <error-message
                                 name="姓名"
@@ -187,6 +198,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': errors['電話'] }"
                                 placeholder="請輸入電話"
+                                v-model="form.user.tel"
                             ></v-field>
                             <error-message
                                 name="電話"
@@ -205,7 +217,7 @@
                                 class="form-control"
                                 :class="{ 'is-invalid': errors['地址'] }"
                                 placeholder="請輸入地址"
-                                rules="required"
+                                rules="required" v-model="form.user.address"
                             ></v-field>
                             <error-message
                                 name="地址"
@@ -228,7 +240,7 @@
                             </button>
                         </div>
                     </v-form>
-                </div> -->
+                </div>
       </div>
     </div>
 
