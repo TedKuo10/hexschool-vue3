@@ -102,6 +102,26 @@ const app = createApp({
         }).catch((err) => {
           console.log(err);
         });
+    },
+    uploadImg() {
+      const url = `${this.apiURL}/api/${this.apiPath}/admin/upload`;
+      const fileInput = document.querySelector('#file');
+      // console.dir(fileInput.files[0]);
+      const file = fileInput.files[0];
+      const formData = new FormData();
+      formData.append('file-to-upload', file);
+
+      axios.post(url, formData)
+        .then((res) => {
+          if (res.data.success) {
+            console.log(res.data.imageUrl);
+            this.tempProduct.imageUrl = res.data.imageUrl;
+          } else {
+            console.log(res.data.message);
+          }
+        }).catch((err) => {
+          console.log(err);
+        });
     }
   },
 });

@@ -96,8 +96,12 @@
                   <div class="mb-4">
                     <div class="form-group">
                       <label for="imageUrl" class="mb-2 fw-bolder">主要圖片</label>
-                      <input type="text" class="form-control mb-1" v-model="tempProduct.imageUrl" placeholder="請輸入圖片連結">
+                      <input type="text" class="form-control mb-1" v-model="tempProduct.imageUrl" placeholder="請輸入圖片連結或上傳圖片">
                       <img class="img-fluid" :src="tempProduct.imageUrl" alt="">
+                    </div>
+                    <div class="form-group">
+                      <input type="file" class="form-control" id="file" placeholder="請上傳圖片"/>
+                      <button type="button" class="btn btn-primary" @click="uploadImg">上傳</button>
                     </div>
                   </div>
                   <!-- <div>
