@@ -1,7 +1,8 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.0-beta.4/vue.esm-browser.min.js';
 import pagination from './pagination.js'
 
-let productModal = {}; // 定義接近全域變數
+// 定義接近全域變數
+// let productModal = {};
 let delProductModal = {};
 
 const app = createApp({
@@ -27,10 +28,10 @@ const app = createApp({
     axios.defaults.headers.common['Authorization'] = token;
 
     // Boostrap 實體
-    productModal = new bootstrap.Modal(document.getElementById('productModal'), {
-      keyboard: false,
-      backdrop: false
-    });
+    // productModal = new bootstrap.Modal(document.getElementById('productModal'), {
+    //   keyboard: false,
+    //   backdrop: false
+    // });
     delProductModal = new bootstrap.Modal(document.getElementById('delProductModal'), {
       keyboard: false,
       backdrop: false
@@ -54,18 +55,21 @@ const app = createApp({
         });
     },
     openModal(cond, item) {
-      console.log(cond);
+      console.log(this.$refs);
 
       if (cond === 'add') {
         this.tempProduct = {
           imagesUrl: []
         };
         this.isNew = true;
-        productModal.show();
+        // productModal.show();
+        // 除了可以取得 DOM 元素之外，也可以讓外層調用內層方法時使用
+        this.$refs.productModalA.openModal();
       } else if (cond === 'edit') {
         this.tempProduct = JSON.parse(JSON.stringify(item));
         this.isNew = false;
-        productModal.show();
+        // productModal.show();
+        this.$refs.productModalA.openModal();
       } else if (cond === 'delete') {
         this.tempProduct = item;
         delProductModal.show();
@@ -85,7 +89,8 @@ const app = createApp({
           console.log(res);
           if (res.data.success) {
             this.getProducts();
-            productModal.hide();
+            // productModal.hide();
+            this.$refs.productModalA.closeModal();
           } else {
             console.log(res.data.message);
           }
@@ -134,6 +139,11 @@ const app = createApp({
 
 // productModal 一旦變元件，因為單向數據流的關係，uploadImg 會出問題，因此要把該方法拉進去
 app.component('productModal', {
+  data() {
+    return {
+      modal: ''
+    }
+  },
   props: ['tempProduct'],
   template: `<div id="productModal" ref="productModal" class="modal fade" tabindex="-1" aria-labelledby="productModalLabel"
            aria-hidden="true">
@@ -258,7 +268,17 @@ app.component('productModal', {
       const formData = new FormData();
       formData.append('file-to-upload', file);
       this.$emit('upload-img', formData);
+    },
+    openModal() {
+      this.modal.show();
+    },
+    closeModal() {
+      this.modal.hide();
     }
+  },
+  mounted() {
+    console.log(this.$refs);
+    this.modal = new bootstrap.Modal(this.$refs.productModal);
   },
 });
 

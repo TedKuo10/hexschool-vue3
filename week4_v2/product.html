@@ -83,7 +83,7 @@
       <!-- Modal -->
 
       <!-- 新增用 Modal -->
-      <product-modal :temp-product="tempProduct" @update-product="updateProduct" @upload-img="uploadImg"></product-modal>
+      <product-modal ref="productModalA" :temp-product="tempProduct" @update-product="updateProduct" @upload-img="uploadImg"></product-modal>
 
       <!-- 刪除用 Modal -->
       <div id="delProductModal" ref="delProductModal" class="modal fade" tabindex="-1"
